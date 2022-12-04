@@ -1,11 +1,11 @@
 <script>
 import ToDoItem from "./components/ToDoItem.vue";
-import ButtonNewTodo from "./components/ButtonNewTodo.vue";
+import AddNewTodo from "./components/AddNewTodo.vue";
 
 export default {
   components: {
     ToDoItem,
-    ButtonNewTodo,
+    AddNewTodo,
   },
   data() {
     return {
@@ -16,8 +16,11 @@ export default {
     };
   },
   methods: {
-    handleCreateNewTodoItem() {
-      this.todoItems.unshift({ text: "new Todo", done: false });      
+    handleCreateNewTodoItem(newItem) {
+      this.todoItems.unshift({ text: newItem, done: false });
+    },
+    handleDeleteItem(index) {
+      this.todoItems.splice(index, 1);
     },
   },
 };
@@ -30,10 +33,10 @@ export default {
     <div class="wrapper">
       <div style="text-align: center">
         <h1>Todo App</h1>
-        <ButtonNewTodo @createNewTodoItem="handleCreateNewTodoItem"></ButtonNewTodo>
+        <AddNewTodo @createNewTodoItem="handleCreateNewTodoItem"></AddNewTodo>
       </div>
       <div v-for="(item, i) in todoItems" :key="i">
-        <ToDoItem v-model="todoItems[i]" />
+        <ToDoItem v-model="todoItems[i]" :index="i" @deleteItem="handleDeleteItem" />
       </div>
     </div>
   </main>
