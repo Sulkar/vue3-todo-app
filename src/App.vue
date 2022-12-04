@@ -11,13 +11,13 @@ export default {
     return {
       todoItems: [
         { text: "Hausaufgaben machen", done: false },
-        { text: "Müll rausbringen", done: false },
+        { text: "Müll rausbringen", done: true },
       ],
     };
   },
   methods: {
     handleCreateNewTodoItem() {
-      this.todoItems.push({ text: "new Todo", done: false });
+      this.todoItems.unshift({ text: "new Todo", done: false });      
     },
   },
 };

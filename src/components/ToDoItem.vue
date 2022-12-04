@@ -8,8 +8,10 @@ export default {
   emits: ["update:modelValue"],
   methods: {
     updateValue(key, value) {
-      this.$emit("update:modelValue", 
-      { ...this.modelValue, [key]: value });
+      this.$emit("update:modelValue", { ...this.modelValue, [key]: value });
+    },
+    handleClick(event) {
+      console.log(event.target.innerHTML);
     },
   },
   watch: {},
@@ -17,27 +19,24 @@ export default {
 </script>
 
 <template>
-  <div class="greetings">
-    <h3 contenteditable @input="updateValue('text', $event.target.innerHTML)">{{modelValue.text}}</h3>
+  <div class="item">
+    <h3 :class="modelValue.done ? 'done' : ''" :contenteditable="!modelValue.done" @input="updateValue('text', $event.target.innerHTML)" @click="handleClick">{{ modelValue.text }}</h3>
+    <input type="checkbox" class="checkbox" v-model="modelValue.done" />
   </div>
 </template>
 
 <style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  top: -10px;
+.item {
+  display: flex;
+}
+.done {
+  text-decoration: line-through;
+}
+.checkbox {
+  margin-left: 20px;
 }
 
 h3 {
   font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
 }
 </style>
