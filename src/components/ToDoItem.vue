@@ -1,5 +1,9 @@
 <script>
+import IconDelete from "./icons/IconDelete.vue";
 export default {
+  components: {
+    IconDelete,
+  },
   props: {
     modelValue: {
       type: Object,
@@ -23,11 +27,20 @@ export default {
   <div class="item">
     <input type="checkbox" class="checkbox" v-model="modelValue.done" />
     <h3 :class="modelValue.done ? 'done' : ''" @input="updateValue('text', $event.target.innerHTML)" @click="handleClick">{{ modelValue.text }}</h3>
-    <div class="btnDelete" @click="deleteItem">delete</div>
+    <div class="btnDelete" @click="deleteItem">
+      <i><IconDelete /></i>
+    </div>
   </div>
 </template>
 
 <style scoped>
+i {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  width: 20px;
+  height: 20px;
+}
 .btnDelete {
   cursor: pointer;
   color: orangered;
