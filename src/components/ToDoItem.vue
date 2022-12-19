@@ -8,15 +8,15 @@ export default {
     modelValue: {
       type: Object,
     },
-    index: Number,
+    id: Number,
   },
-  emits: ["update:modelValue", "deleteItem"],
+  emits: ["updateItem", "deleteItem"],
   methods: {
-    updateValue(key, value) {
-      this.$emit("update:modelValue", { ...this.modelValue, [key]: value });
+    updateItem() {
+      this.$emit("updateItem", this.id, this.modelValue.done);
     },
     deleteItem() {
-      this.$emit("deleteItem", this.index);
+      this.$emit("deleteItem", this.id);
     },
   },
   watch: {},
@@ -25,7 +25,7 @@ export default {
 
 <template>
   <div class="item">
-    <input type="checkbox" class="checkbox" v-model="modelValue.done" />
+    <input type="checkbox" class="checkbox" v-model="modelValue.done" @change="updateItem" />
     <h3 :class="modelValue.done ? 'done' : ''" @input="updateValue('text', $event.target.innerHTML)" @click="handleClick">{{ modelValue.text }}</h3>
     <div class="btnDelete" @click="deleteItem">
       <i><IconDelete /></i>

@@ -1,16 +1,28 @@
 <script>
+import { db } from "../db";
+
 export default {
-  emits: ["createNewTodoItem"],
+  emits: ["newItemCreated"],
   data() {
     return {
       newItem: "",
+      status: "",
     };
   },
   methods: {
-    addNewTodoItem() {
+    async addNewTodoItemDB() {
       if (this.newItem != "") {
-        this.$emit("createNewTodoItem", this.newItem);
-        this.newItem = "";
+        try {
+          const id = await db.todos.add({
+            text: this.newItem,
+            done: false,
+          });
+          this.status = "Todo: " + this.newItem + " successfully added. Got id " + id;
+          this.$emit("newItemCreated");
+          this.newItem = "";
+        } catch (error) {
+          this.status = "Failed to add " + this.newItem + ": " + error;
+        }
       }
     },
   },
@@ -20,12 +32,15 @@ export default {
 <template>
   <div>
     <input type="text" :value="newItem" @input="(event) => (newItem = event.target.value)" />
-    <button @click="addNewTodoItem">+</button>
+    <button @click="addNewTodoItemDB">+</button>
+  </div>
+  <div>
+    {{ status }}
   </div>
 </template>
 
 <style scoped>
-div{
+div {
   margin-bottom: 10px;
 }
 input {

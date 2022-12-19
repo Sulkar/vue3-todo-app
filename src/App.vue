@@ -1,6 +1,7 @@
 <script>
 import ToDoItem from "./components/ToDoItem.vue";
 import AddNewTodo from "./components/AddNewTodo.vue";
+import { db } from "./db";
 
 export default {
   components: {
@@ -9,19 +10,27 @@ export default {
   },
   data() {
     return {
-      todoItems: [
-        { text: "Hausaufgaben machen", done: false },
-        { text: "Müll rausbringen", done: true },
-      ],
+      todoItems: [],
     };
   },
   methods: {
-    handleCreateNewTodoItem(newItem) {
-      this.todoItems.unshift({ text: newItem, done: false });
+    handleNewItemCreated() {
+      this.loadData();
     },
-    handleDeleteItem(index) {
-      this.todoItems.splice(index, 1);
+    async handleDeleteItem(id) {
+      await db.todos.delete(id);
+      this.loadData();
     },
+    async handleUpdateItem(id, trueFalse) {
+      await db.todos.update(id, {done: trueFalse});
+    },
+    async loadData() {
+      this.todoItems = await db.todos.toArray();
+    },
+  },
+  mounted() {
+    console.log("Todo App loaded");
+    this.loadData();
   },
 };
 </script>
@@ -33,10 +42,10 @@ export default {
     <div class="wrapper">
       <div style="text-align: center">
         <h1>Todo App</h1>
-        <AddNewTodo @createNewTodoItem="handleCreateNewTodoItem"></AddNewTodo>
+        <AddNewTodo @newItemCreated="handleNewItemCreated"></AddNewTodo>
       </div>
       <div v-for="(item, i) in todoItems" :key="i">
-        <ToDoItem v-model="todoItems[i]" :index="i" @deleteItem="handleDeleteItem" />
+        <ToDoItem v-model="todoItems[i]" :id="todoItems[i].id" @updateItem="handleUpdateItem" @deleteItem="handleDeleteItem" />
       </div>
     </div>
   </main>
